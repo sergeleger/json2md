@@ -1,0 +1,29 @@
+
+# Nobel Prize
+
+See [The Nobel Prize Developer Zone](https://www.nobelprize.org/about/developer-zone-2/).
+
+
+Created with the following execution of `md2json`:
+
+```shell
+$ curl -s "https://api.nobelprize.org/v1/prize.json" | \
+    md2json nobel.md.template - > nobel.md
+```
+
+{{- /* Define a Laureates template */}}
+
+{{- define "laureates"}}
+{{- range .}}{{ concatenate ", " .surname .firstname }}<br>{{end -}}
+{{end -}}
+
+{{- $lastYear := "9999" }}
+
+| Year  | Category | Laureates |
+| :---: | -------- | --------- |
+{{- range .prizes }}
+| {{if ne $lastYear .year }}{{ $lastYear = .year}}**{{ $lastYear }}** {{end -}}
+| {{.category -}}
+| {{template "laureates" .laureates -}} |
+{{- end}}
+

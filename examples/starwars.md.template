@@ -1,0 +1,18 @@
+# Star Wars Movies
+
+See [The Star Wars API](https://swapi.dev/) (SWAPI).
+
+Created with the following execution of `md2json`:
+
+```shell
+$ curl -s "https://swapi.dev/api/films/" | \
+    md2json starwars.md.template - > starwars.md
+```
+
+## Movies
+
+| Title | Crawl |
+| ----- | :---: |
+{{- range .results }}
+| {{ .title }} | {{ .opening_crawl | tablecell }} |
+{{- end}}

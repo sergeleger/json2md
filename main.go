@@ -1,3 +1,6 @@
+// Copyright 2020 Serge Léger. All rights reserved.
+// Use of this source code is governed by an MIT
+// license that can be found in the LICENSE file.
 package main
 
 import (
@@ -9,10 +12,41 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"strings"
 	"text/template"
 )
 
-var templateFuncs = template.FuncMap{}
+var templateFuncs = template.FuncMap{
+	"stringsReplace": strings.Replace,
+
+	// sanitize table cell strings to remove newlines
+	"tablecell": func(s string) string {
+		s = strings.ReplaceAll(s, "\r", "")
+		s = strings.ReplaceAll(s, "\n", "<br>")
+		return s
+	},
+
+	// concatenate joins the list of elements
+	"concatenate": func(sep string, all ...interface{}) string {
+		var sb strings.Builder
+
+		n := 0
+		for i := range all {
+			if all[i] == nil {
+				continue
+			}
+
+			n++
+			if n > 1 {
+				fmt.Fprint(&sb, sep)
+			}
+
+			fmt.Fprintf(&sb, "%v", all[i])
+		}
+
+		return sb.String()
+	},
+}
 
 func main() {
 	if err := mainErr(); err != nil {
@@ -23,7 +57,7 @@ func main() {
 
 func mainErr() error {
 	output := flag.String("o", "-", "output `file`, defaults to stdout")
-	multiline := flag.Bool("jsonml", false, "attempts to read all json files as multi-line files")
+	jsonl := flag.Bool("jsonl", false, "read JSON-line encoded files")
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [options] mdtemplate [ jsonFile* ]\n", os.Args[0])
 		flag.PrintDefaults()
@@ -54,7 +88,7 @@ func mainErr() error {
 	var data interface{}
 	switch {
 	case n == 1:
-		data, err = readJSON(args[0], *multiline)
+		data, err = readJSON(args[0], *jsonl)
 		if err != nil {
 			return err
 		}
@@ -62,7 +96,7 @@ func mainErr() error {
 	case n > 1:
 		obj := make([]interface{}, n)
 		for i := range args {
-			obj[i], err = readJSON(args[i], *multiline)
+			obj[i], err = readJSON(args[i], *jsonl)
 			if err != nil {
 				return err
 			}
@@ -85,7 +119,7 @@ func mainErr() error {
 }
 
 // readJSON reads a single file JSON file.
-func readJSON(file string, multiline bool) (interface{}, error) {
+func readJSON(file string, jsonl bool) (interface{}, error) {
 	f, err := openFile(file)
 	if err != nil {
 		return nil, err
@@ -93,7 +127,7 @@ func readJSON(file string, multiline bool) (interface{}, error) {
 	defer f.Close()
 
 	// read single valid json object from the file
-	if !multiline {
+	if !jsonl {
 		var data interface{}
 		err = json.NewDecoder(f).Decode(&data)
 		return data, err
