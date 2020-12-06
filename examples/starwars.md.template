@@ -2,11 +2,11 @@
 
 See [The Star Wars API](https://swapi.dev/) (SWAPI).
 
-Created with the following execution of `md2json`:
+Created with the following execution of `json2md`:
 
 ```shell
 $ curl -s "https://swapi.dev/api/films/" | \
-    md2json starwars.md.template - > starwars.md
+    json2md starwars.md.template - > starwars.md
 ```
 
 ## Movies

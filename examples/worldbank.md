@@ -4,11 +4,11 @@ See [The World Bank](https://www.worldbank.org/) -
 [Country API Queries](https://datahelpdesk.worldbank.org/knowledgebase/articles/898590-country-api-queries).
 
 
-Created with the following execution of `md2json`
+Created with the following execution of `json2md`
 
 ```shell
 $ curl -s "http://api.worldbank.org/v2/countries?per_page=10&format=json" | \
-    md2json worldbank.md.template - > worldbank.md
+    json2md worldbank.md.template - > worldbank.md
 ```
 
 

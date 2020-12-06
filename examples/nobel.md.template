@@ -4,11 +4,11 @@
 See [The Nobel Prize Developer Zone](https://www.nobelprize.org/about/developer-zone-2/).
 
 
-Created with the following execution of `md2json`:
+Created with the following execution of `json2md`:
 
 ```shell
 $ curl -s "https://api.nobelprize.org/v1/prize.json" | \
-    md2json nobel.md.template - > nobel.md
+    json2md nobel.md.template - > nobel.md
 ```
 
 {{- /* Define a Laureates template */}}
