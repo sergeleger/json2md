@@ -13,6 +13,6 @@ $ curl -s "https://swapi.dev/api/films/" | \
 
 | Title | Crawl |
 | ----- | :---: |
-{{- range .results }}
+{{- range .Content.results }}
 | {{ .title }} | {{ .opening_crawl | tablecell }} |
 {{- end}}

@@ -14,14 +14,14 @@ $ curl -s "https://api.nobelprize.org/v1/prize.json" | \
 {{- /* Define a Laureates template */}}
 
 {{- define "laureates"}}
-{{- range .}}{{ concatenate ", " .surname .firstname }}<br>{{end -}}
+{{- range .}}{{ join ", " .surname .firstname }}<br>{{end -}}
 {{end -}}
 
 {{- $lastYear := "9999" }}
 
 | Year  | Category | Laureates |
 | :---: | -------- | --------- |
-{{- range .prizes }}
+{{- range .Content.prizes }}
 | {{if ne $lastYear .year }}{{ $lastYear = .year}}**{{ $lastYear }}** {{end -}}
 | {{.category -}}
 | {{template "laureates" .laureates -}} |

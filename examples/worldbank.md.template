@@ -12,7 +12,7 @@ $ curl -s "http://api.worldbank.org/v2/countries?per_page=10&format=json" | \
 ```
 
 {{/* Extract the countries from the second element. */}}
-{{- $countries := index . 1}}
+{{- $countries := index .Content 1}}
 
 ## First {{ $countries | len }} Entries
 
